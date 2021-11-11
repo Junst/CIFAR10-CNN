@@ -81,10 +81,39 @@ Batch Size란, 전체 트레이닝 데이터 셋을 여러 작은 그룹으로 �
 먼저 Epoch 30, Batch Size 32일 때를 그래프로 나타냈다. Train 에 대한 accuracy(훈련 정확도)는 Epoch의 증가와 비례하나, test 에 대한 accuracy(검증 정확도)는 16 epoch에서 최고점을 찍은 후, 감소와 증가를 반복하고 있다. 이는 train 모델에서의 과적합이 test 모델에서 일반화하기 어렵다는 점을 보여주고 있다. 즉 불필요한 특징을 배운다고 볼 수 있다. 마찬가지로 Train에 대한 loss(훈련 손실)은 꾸준히 낮아지나, Epoch가 증가함에 따라 누적되는 과적합 요소가 Test에 대한 loss(검증 손실)을 높일 수 있는 요인으로 작용할 수 있다.
 
 ### 실험 2
+![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/CNN%20_%20VGG/30-50%20acc.png)
+![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/CNN%20_%20VGG/30-50%20loss.png)
 
-수정중 ...
+다음은 Epoch 30, Batch Size 50일 때의 결과를 그래프로 나타냈다. 실험 1과 두드러지게 대조되는 부분은 Train과 Test 선의 간격, 즉 차이가 커졌다는 점이다. 이 실험의 최종 결과값은 다음과 같다.
+
+loss: 0.3219 
+accuracy: 0.8888
+val_loss(test): 0.4795
+val_accuracy(test): 0.8447
+
+이렇게 검증 데이터의 손실이 높고, 정확도가 낮아진 이유는 실험2의 Batch size트레이닝 데이터를 실험 1보다 높게 설정하였기 때문이다. 이로 인해 비효율적인 리소스 사용으로 학습 시간 역시 Epoch당 평균 211초를 기록한 실험 1과 다르게 실험 2는 Epoch당 평균 282초를 기록했다. 
 
 
+### 실험 3
+![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/CNN%20_%20VGG/128_30acc1.png)
+![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/CNN%20_%20VGG/128_30loss_1.png)
 
+실험 3은 Epoch 30, Batch Size 128로 진행했다. 역시 실험 2와 마찬가지로 검증 데이터의 손실이 높고, 최종 정확도는 차이가 더욱 벌어졌다. Batch Size의 크기가 클수록 비효율적인 리소스 사용이 증가하였다. 즉, 작은 Batch Size의 실험 1이 generalization performance 측면에서 우수한 것으로 나타났다. 따라서 본 연구 실험은 Batch Size 32로 진행하기로 결정했다.
 
+### 실험 4
+![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/CNN%20_%20VGG/32_50accuracy_1.png)
+![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/CNN%20_%20VGG/32_50loss_1.png)
 
+실험 4는 기존의 실험과 다르게 Epoch를 50으로 설정했다. Batch size는 32로 진행했다. 실험 4는 실험 1과 비교하여 다음과 같은 특징을 가진다. 먼저 실험 4 역시 Epoch가 진행됨에 따라 train accuracy (훈련 정확도)는 증가하지만 test accuracy(검증 정확도)는 계속된 증가를 보여주지 않는다는 실험 1의 가설을 뒷받침한다. 또한 실험 1과 마찬가지로, 실험 4의 loss 그래프를 통해서 train loss(훈련 손실)의 과적합 요소가 Test에 대한 loss(검증 손실)을 높일 수 있다는 점을 보여준다. 실험 1과 차이가 나는 부분은 최종값에서의 accuracy와 loss 각각의 train 모델과 test 모델이다. 두 모델 사이의 간격이 계속해서 벌어지는데 이 역시도 실험 1의 가설을 뒷받침한다. 따라서 본 실험은 Epoch의 증가가 과적합을 유발하여 일반화에 장애를 준다는 결론을 내렸다. 또한 Epoch 30으로 진행하기로 결정했다.
+
+## 6. Discussion and Conclusion
+![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/CNN%20_%20VGG/tsne%20%EC%82%B0%EC%A0%90%EB%8F%84%20%EA%B2%B0%EA%B3%BC.jpg)
+![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/CNN%20_%20VGG/%EC%B5%9C%EC%A2%85%20epoch%20%EA%B2%B0%EA%B3%BC.png)
+
+최종적으로는 epoch = 30으로 코드를 수행하였고, epoch = 24일 때, 정확도가 0.8497로 가장 우수하게 나온 것을 확인할 수 있었다. Epoch가 30일 때보다, 24일 때의 정확도가 더 높은 이유는 네트워크가 훈련 데이터를 너무 잘 모델링하고 검증 데이터로 일반화하지 못하는 부분에 과적합이 있기 때문이다. 반면에 Epoch가 낮을 때는 모델이 학습 데이터의 기본 패턴을 학습하지 못한다. 따라서 모델의 학습을 위해서 Epoch를 적절히 조율해가며 코드를 수행할 필요가 있다는 결론에 도달했다. 다만, 본 연구는 실험을 여러 번 진행해보지 않았기 때문에, 가설에 뒷받침할 근거가 부족하다는 한계점이 있다. 또한 CAM 구조를 따로 분리하여 구현했다는 한계점 역시도 존재한다. 이를 극복하기 위해서는 다양한 실험과 여러 변수들의 설정을 조합해볼 필요가 있다. 본 연구는 Deep Learning의 CNN 구조에서 각 변수가 가지고 있는 의미와 그러한 구현 방법과 원리를 최대한 많이 활용하려고 했다.
+
+## 7. References
+"Convolutional Neural Network", MathWorks, accessed June 5, 2021, https://kr.mathworks.com/discovery/convolutional-neural-network-matlab.html
+"Neural Networks", MathWorks, accessed June 5, 2021, https://kr.mathworks.com/discovery/neural-network.html
+Yaqub, M., Jinchao, F., Zia, M. S., Arshid, K., Jia, K., Rehman, Z. U., & Mehmood, A. (2020). State-of-the-Art CNN Optimizer for Brain Tumor Segmentation in Magnetic Resonance Images. Brain sciences, 10(7), 427. https://doi.org/10.3390/brainsci10070427
+Ioffe, S., & Szegedy, C. (2015, June). Batch normalization: Accelerating deep network training by reducing internal covariate shift. In International conference on machine learning (pp. 448-456). PMLR.
