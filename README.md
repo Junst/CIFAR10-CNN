@@ -114,6 +114,9 @@ val_accuracy(test): 0.8447
 
 ## 7. References
 "Convolutional Neural Network", MathWorks, accessed June 5, 2021, https://kr.mathworks.com/discovery/convolutional-neural-network-matlab.html
+
 "Neural Networks", MathWorks, accessed June 5, 2021, https://kr.mathworks.com/discovery/neural-network.html
+
 Yaqub, M., Jinchao, F., Zia, M. S., Arshid, K., Jia, K., Rehman, Z. U., & Mehmood, A. (2020). State-of-the-Art CNN Optimizer for Brain Tumor Segmentation in Magnetic Resonance Images. Brain sciences, 10(7), 427. https://doi.org/10.3390/brainsci10070427
+
 Ioffe, S., & Szegedy, C. (2015, June). Batch normalization: Accelerating deep network training by reducing internal covariate shift. In International conference on machine learning (pp. 448-456). PMLR.
