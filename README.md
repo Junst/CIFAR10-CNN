@@ -38,13 +38,16 @@ Data augmentation 은 기존 데이터의 약간 수정된 사본이나 기존 �
 
 ### Batch Nomalization
 ![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/PIC/%EA%B7%B8%EB%A6%BC3.png)
+
 배치 정규화는 2015년에 발표된 "Batch Normalization: Accelerating Deep Network Training by Reducing Internal Covariate Shift" 논문에서 등장한 개념이다. 일반적으로 정규화를 하는 이유는 학습 속도를 더 높이고 Local optimum에 빠질 가능성을 줄이기 위해서이다. 배치 정규화 논문에서는 학습에서 불안정화가 일어나는 이유를 'Internal Covariance Shift' 라고 주장하고 있는데, 이는 이전 layer의 파라미터 변화로 인해 현재 layer의 입력 분포가 바뀌는 현상인 Covariate Shift 현상이 layer를 통과할 때마다 발생하면서 입력의 분포가 조금씩 변하는 현상을 의미한다.
 
 이 현상을 막기 위해 간단하게 각 layer의 입력의 분산을 평균이 0, 표준편차가 1인 입력값으로 정규화 시키는 방법을 생각해 볼 수 있는데, 이러한 방법을 Whitening이라고 한다. 하지만 이러한 Whitening 방법은 계산량이 많고 일부 파라미터들의 영향이 무시될 수 있다는 약점이 존재한다. 여기서 Whitening의 문제점을 해결하도록 한 트릭이 바로 배치 정규화이다. 배치 정규화는 평균과 분산을 조정하는 과정이 별도의 과정으로 분리된 것이 아닌, 신경망 안에 포함되어서 학습을 할 때 평균과 분산을 조정하는 과정 역시 같이 수행되도록 한다. 우리 코드에서는 keras에 내장된 BatchNormalization() 함수를 간단히 이용해 배치 정규화를 진행하였다.
 
 ## Intermediate Feature Space
 다음은 학습 과정에서 생성되는 feature space를 저장하여 영상 분류가 어떤 식으로 이루어지고 정확도가 어떻게 향상되는지를 시각화를 통해 살펴보도록 하겠다. 우리는 각 epoch에서 최고 정확도가 갱신될 때마다 모델을 저장한 다음, t-SNE를 이용하여 그 모델에서 분류가 어떤 식으로 진행되었는지를 산점도 그래프로 나타내 보았다.
-![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/PIC/%EA%B7%B8%EB%A6%BC4.jpg) (Epoch=1, accuracy = 0.5791)
+
+![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/PIC/%EA%B7%B8%EB%A6%BC4.jpg)
+(Epoch=1, accuracy = 0.5791)
 
 먼저 epoch=1일 때는 정확도가 약 0.5791로, 분류가 위와 같이 진행되었다. 어느 정도의 분류가 이루어졌지만, 아직 정확도가 낮기 때문에 제대로 분류가 이루어지지 않은 부분 역시 발견되었음을 확인할 수 있다.
 
@@ -57,6 +60,7 @@ Class Activation Mapping (CAM) 이란 CNN이 특정 클라스 이미지를 그 �
 위 figure 는 CAM 과 CAM 의 네트워크 구조를 보여준다. 우선 기본적인 구조는 Network in Network 과 GoogleNet 과 흡사하다. 하지만 결정적인 차이점이 마지막 Conv Layer를 Fc-Layer 로 Flatten 하지 않고, GAP(Global Average Pooling) 을 통해 새로운 Weigh을 만들어 낸다. 마지막 Conv Layer 가 총 n 개의 channel 로 이루어져 있다면, 각각의 채널들은 GAP 를 통해 하나의 Weight 값으로 나타내고, 총 n 개의 Weight 들이 생긴다. 그리고 마지막에 Softmax 함수로 연결되어 이 Weight 들도 백프롭을 통해 학습을 시키는 것이다.
 
 그러나 우리 연구에서는 cam을 같이 실험하지 않고, 따로 코드를 분리하여 실험을 진행했다. Conv Layer에서 추출한 1개의 샘플 데이터에서 Heat Map을 통해 CAM을 진행했다. 
+
 ![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/PIC/%EA%B7%B8%EB%A6%BC6.png) ![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/PIC/%EA%B7%B8%EB%A6%BC7.png)
 
 128x128 픽셀에서 32 사이즈의 이미지로 추출한 Heat Map은 위와 같다. 해당 사진을 통해, 이미지의 특징적인 부분에서 높은 값을 가지는 Heat Map을 확인할 수 있다.
