@@ -55,6 +55,7 @@ Data augmentation 은 기존 데이터의 약간 수정된 사본이나 기존 �
 
 ## 4. Class Activation Map
 Class Activation Mapping (CAM) 이란 CNN이 특정 클라스 이미지를 그 클라스라고 예측하게 한 그 이미지 내의 위치 정보를 의미한다. 
+
 ![image](https://github.com/Junst/CIFAR-10_CNN/blob/main/PIC/%EA%B7%B8%EB%A6%BC5.jpg)
 
 위 figure 는 CAM 과 CAM 의 네트워크 구조를 보여준다. 우선 기본적인 구조는 Network in Network 과 GoogleNet 과 흡사하다. 하지만 결정적인 차이점이 마지막 Conv Layer를 Fc-Layer 로 Flatten 하지 않고, GAP(Global Average Pooling) 을 통해 새로운 Weigh을 만들어 낸다. 마지막 Conv Layer 가 총 n 개의 channel 로 이루어져 있다면, 각각의 채널들은 GAP 를 통해 하나의 Weight 값으로 나타내고, 총 n 개의 Weight 들이 생긴다. 그리고 마지막에 Softmax 함수로 연결되어 이 Weight 들도 백프롭을 통해 학습을 시키는 것이다.
